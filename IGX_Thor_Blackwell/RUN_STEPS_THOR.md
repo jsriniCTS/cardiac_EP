@@ -172,7 +172,14 @@ to match what you trained — `11` and `128`). On this GPU use `--gpu`:
 cd ../TRUNet-main && python segment_file.py /path/to/scan.nii.gz --gpu
 ```
 
----
+  python predict_trunet.py 
+  --input ./data/ImageCAS/images/623.img.nii.gz \
+  f = ./data/ImageCAS/images/*.img.nii.gz \
+  id=$(basename "$f" .img.nii.gz)
+  --checkpoint ./runs/thor_run1/best_metric_model.pth \
+  --trunet-root ./TRUNet-main \
+  --num-classes 11 --img-size 128 \
+  --output ./data/pred_seg/${id}_seg.nii.gz
 
 ## Blackwell / IGX Thor troubleshooting
 
