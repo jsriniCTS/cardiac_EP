@@ -153,6 +153,15 @@ python train_trunet_cardiac.py --root-path smoke/npz --trunet-root ../TRUNet-mai
 Expect `Training Finished!` and a `best_metric_model.pth`.
 
 ---
+## Confusion matrix
+pip install matplotlib
+
+python3 confusion_matrix.py \
+  --root-path ./data/trunet_cardiac \
+  --checkpoint ./runs/thor_run1/best_metric_model.pth \
+  --trunet-root ./TRUNet-main \
+  --num-classes 11 --img-size 128 --split val \
+  --out ./runs/thor_run1/confusion
 
 ## Step 5 — Inference
 
