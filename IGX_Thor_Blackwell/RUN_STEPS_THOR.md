@@ -69,7 +69,7 @@ Image ↔ label are matched by the leading integer id (`1.img.nii.gz` ↔ `1.nii
 ## Step 2 — Preprocess to `.npz` (default 128³)
 
 ```bash
-python preprocess_to_npz.py \
+python preprocess_to_npz_parallel.py \
   --images-dir /data/ImageCAS/images \
   --labels-dir /data/stacom_labels \
   --out-root   /data/trunet_cardiac \
@@ -89,18 +89,26 @@ python train_trunet_cardiac.py \
   --trunet-root ../TRUNet-main \
   --num-classes 11 \
   --img-size 128 \
-  --batch-size 2 \
+  --batch-size 4 \
   --precision bf16 \
+  --compile \
   --max-epochs 100 \
-  --num-workers 8 \
+  --num-workers 12 \
   --save-path ./runs/thor_run1
 ```
 
-Startup prints a Blackwell check, e.g.:
+**GPU selection (important on IGX Thor):** `nvidia-smi -L` shows *two* devices —
+`GPU 0: NVIDIA Thor` (weak integrated iGPU) and `GPU 1: NVIDIA RTX PRO 6000`
+(your training GPU). The script **auto-selects the discrete RTX PRO 6000 by
+name**, so you normally don't need to do anything. To force it, add
+`--gpu-index 1`, or `export CUDA_VISIBLE_DEVICES=1` before running.
+
+Startup prints the device inventory and which one it picked — verify it's the
+RTX PRO 6000, not Thor:
 ```
-[thor] GPU        : NVIDIA RTX PRO 6000 Blackwell Max-Q ...
-[thor] capability : sm_120   VRAM: 96 GB
-[thor] torch      : 2.7.x   CUDA: 12.8
+[thor] cuda:0  NVIDIA Thor  sm_XX  ... GB
+[thor] cuda:1  NVIDIA RTX PRO 6000 Blackwell Max-Q  sm_120  96 GB
+[thor] selected   : cuda:1  NVIDIA RTX PRO 6000 Blackwell Max-Q  sm_120  96 GB
 [thor] precision  : bf16
 ```
 
@@ -115,10 +123,14 @@ Key flags:
   scaling, best stability). fp16 uses a GradScaler; fp32 for debugging.
 - `--batch-size` — 2 is conservative for 128³; with 96 GB you can often push
   to 4–8. If you ever OOM, lower this first, then `--img-size`.
-- `--num-workers` — 8 is a good start on the Grace CPU; raise if the GPU is
+- `--num-workers` — 12 is a good start on the Grace CPU; raise if the GPU is
   data-starved (watch `nvidia-smi` utilization).
+- `--compile` — `torch.compile` kernel fusion for Blackwell. Adds a one-time
+  compile (a few minutes) on the first step, then faster epochs. Recommended
+  for real runs; omit it for quick tests.
+- `--gpu-index N` — force a specific CUDA device (default: auto-pick the RTX PRO 6000).
 - `--repo-trainer` — use the repo's exact fp32 loop instead of the AMP loop
-  (parity/debugging; slower, no bf16).
+  (parity/debugging; slower, no bf16, no compile).
 - `--checkpoint path.pth` — resume or fine-tune.
 
 ---
@@ -134,7 +146,7 @@ for i in (1,2,3,7):
     nib.save(nib.Nifti1Image((np.random.rand(60,64,50)*2000-1000).astype('float32'),np.eye(4)), f'smoke/img/{i}.img.nii.gz')
     nib.save(nib.Nifti1Image(np.random.randint(0,11,(60,64,50)).astype('uint8'),np.eye(4)), f'smoke/lab/{i}.nii.gz')
 PY
-python preprocess_to_npz.py --images-dir smoke/img --labels-dir smoke/lab --out-root smoke/npz --size 64 --val-frac 0.25
+python preprocess_to_npz_parallel.py --images-dir smoke/img --labels-dir smoke/lab --out-root smoke/npz --size 64 --val-frac 0.25
 python train_trunet_cardiac.py --root-path smoke/npz --trunet-root ../TRUNet-main \
   --num-classes 11 --img-size 64 --batch-size 1 --max-epochs 1 --num-workers 0 --save-path smoke/run
 ```
@@ -163,4 +175,6 @@ cd ../TRUNet-main && python segment_file.py /path/to/scan.nii.gz --gpu
 | pip installs a CPU-only torch | You're on aarch64 and pip fell back — force the cu128 `--index-url` explicitly. |
 | bf16 NaNs / unstable | bf16 rarely needs it, but try `--precision fp32` to confirm it's precision-related. |
 | GPU under-utilized (`nvidia-smi` low) | Raise `--num-workers`, `--batch-size`; ensure data is on a fast NVMe. |
-| OOM at 128³ | Lower `--batch-size` to 1, then `--img-size`/preprocess `--size` to 96. |
+| Training very slow / banner shows `selected: cuda:0 NVIDIA Thor` | It picked the integrated iGPU. Add `--gpu-index 1` (the RTX PRO 6000 from `nvidia-smi -L`) or `export CUDA_VISIBLE_DEVICES=1`. |
+| `torch.compile` errors or long stall on first step | Compile cost is normal (a few min once). If it errors, just drop `--compile` — training runs fine without it. |
+| OOM at 128³ | Lower `--batch-size` (e.g. 2 → 1), then `--img-size`/preprocess `--size` to 96. |
