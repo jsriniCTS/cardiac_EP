@@ -1,0 +1,17 @@
+# Python dependencies for TRUNet on NVIDIA IGX Thor (Ubuntu 24.04 aarch64,
+# RTX PRO 6000 Blackwell / sm_120).
+#
+# IMPORTANT: do NOT use the TRUNet repo's pinned torch==2.0.1 — it predates
+# Blackwell (sm_120) and cannot run on this GPU. torch/torchvision must come
+# from the CUDA 12.8 (cu128) index; install them with setup_thor.sh, NOT from
+# this file. Everything below is architecture-independent.
+
+monai==1.5.2
+nibabel
+scipy
+numpy
+ml_collections
+tensorboardX
+pydicom
+tensorboard
+# torch / torchvision: installed separately via setup_thor.sh (cu128 build)
