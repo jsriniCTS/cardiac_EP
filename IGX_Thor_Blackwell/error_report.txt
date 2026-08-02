@@ -169,3 +169,16 @@ from user code:
 
 Set TORCHDYNAMO_VERBOSE=1 for the internal stack trace (please do this especially if you're reporting a bug to PyTorch). For even more developer context, set TORCH_LOGS="+dynamo"
 
+_____________________
+
+[pred] using cuda:0  NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition
+[pred] input /home/cts969795/cardiac/cardiac_EP-main/IGX_Thor_Blackwell/data/ImageCAS/images/623.img.nii.gz  shape (512, 512, 275)
+[pred] label voxel counts: {0: 60458364, 1: 1665189, 2: 1656052, 3: 1710188, 4: 1124984, 5: 1714708, 6: 2174831, 7: 850498, 8: 359868, 9: 70142, 10: 304776}
+Traceback (most recent call last):
+  File "/home/cts969795/cardiac/cardiac_EP-main/IGX_Thor_Blackwell/predict_trunet.py", line 169, in <module>
+    main()
+  File "/home/cts969795/cardiac/cardiac_EP-main/IGX_Thor_Blackwell/predict_trunet.py", line 164, in main
+    nib.save(nib.Nifti1Image(pred, img.affine, img.header), out_path)
+  File "/home/cts969795/cardiac/cardiac_EP-main/IGX_Thor_Blackwell/.venv/lib/python3.12/site-packages/nibabel/loadsave.py", line 194, in save
+    raise ImageFileError(f'Cannot work out file type of "{filename}"')
+nibabel.filebasedimages.ImageFileError: Cannot work out file type of "runs/thor_run1/new_ct_seg.nni.gz"
