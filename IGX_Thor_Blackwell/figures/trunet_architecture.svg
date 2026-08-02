@@ -1,0 +1,205 @@
+<svg viewBox="0 0 1500 1060" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arw" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#333"/>
+    </marker>
+    <marker id="arwO" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#d1791f"/>
+    </marker>
+    <style>
+      .t   { fill:#1a1a1a; }
+      .lbl { font-size:12.5px; font-weight:700; }
+      .shp { font-size:11px; fill:#42505c; }
+      .op  { font-size:10.5px; fill:#22303a; }
+      .hdr { font-size:13px; font-weight:700; }
+      .box { stroke-width:1.6; rx:7; }
+      .enc { fill:#dce9f7; stroke:#2c6fbb; }
+      .tr  { fill:#e8e1f5; stroke:#6a4fb0; }
+      .dec { fill:#d9efe8; stroke:#2e8b74; }
+      .head{ fill:#f7dede; stroke:#b0343c; }
+      .io  { fill:#eef1f4; stroke:#55606b; }
+      .flow{ stroke:#333; stroke-width:1.8; fill:none; }
+      .skip{ stroke:#d1791f; stroke-width:1.8; fill:none; stroke-dasharray:7 4; }
+      .frm { fill:#fafbfc; stroke:#c7ced6; stroke-width:1.3; rx:9; }
+      .ib  { fill:#ffffff; stroke:#8a97a3; stroke-width:1.2; rx:5; }
+      .res { stroke:#8a97a3; stroke-width:1.4; fill:none; stroke-dasharray:4 3; }
+    </style>
+  </defs>
+
+  <!-- title -->
+  <text x="750" y="30" text-anchor="middle" class="t" font-size="21" font-weight="700">TRUNet: a 3D hybrid CNN–Transformer network for multi-class cardiac CT segmentation</text>
+  <text x="750" y="54" text-anchor="middle" fill="#5a6570" font-size="13.5">ResNet-V2 hybrid encoder → Vision-Transformer bottleneck → cascaded upsampling decoder with skip connections. Tensor shapes shown as (channels @ spatial) for a 1×128³ input.</text>
+
+  <!-- column headers -->
+  <text x="195"  y="82" text-anchor="middle" class="hdr" fill="#2c6fbb">3D ResNet-V2 Hybrid Encoder</text>
+  <text x="1180" y="82" text-anchor="middle" class="hdr" fill="#2e8b74">Cascaded Upsampling Decoder</text>
+
+  <!-- ============ ENCODER column (x 110-280) ============ -->
+  <!-- Input r128 -->
+  <rect class="box io"  x="110" y="92"  width="170" height="56"/>
+  <text x="195" y="117" text-anchor="middle" class="t lbl">Input CCTA</text>
+  <text x="195" y="134" text-anchor="middle" class="shp">1 @ 128³</text>
+  <!-- Stem r64 -->
+  <rect class="box enc" x="110" y="192" width="170" height="56"/>
+  <text x="195" y="215" text-anchor="middle" class="t lbl">Stem: Conv 7³/2 + MaxPool</text>
+  <text x="195" y="233" text-anchor="middle" class="shp">64 @ 64³</text>
+  <!-- Stage1 r32 -->
+  <rect class="box enc" x="110" y="292" width="170" height="56"/>
+  <text x="195" y="315" text-anchor="middle" class="t lbl">ResNet Stage 1  (×3)</text>
+  <text x="195" y="333" text-anchor="middle" class="shp">256 @ 32³</text>
+  <!-- Stage2 r16 -->
+  <rect class="box enc" x="110" y="392" width="170" height="56"/>
+  <text x="195" y="415" text-anchor="middle" class="t lbl">ResNet Stage 2  (×4)</text>
+  <text x="195" y="433" text-anchor="middle" class="shp">512 @ 16³</text>
+  <!-- Stage3 r8 -->
+  <rect class="box enc" x="110" y="492" width="170" height="56"/>
+  <text x="195" y="515" text-anchor="middle" class="t lbl">ResNet Stage 3  (×9)</text>
+  <text x="195" y="533" text-anchor="middle" class="shp">1024 @ 8³</text>
+
+  <!-- encoder down arrows -->
+  <path class="flow" marker-end="url(#arw)" d="M195,148 L195,190"/>
+  <path class="flow" marker-end="url(#arw)" d="M195,248 L195,290"/>
+  <path class="flow" marker-end="url(#arw)" d="M195,348 L195,390"/>
+  <path class="flow" marker-end="url(#arw)" d="M195,448 L195,490"/>
+
+  <!-- ============ DECODER column (x 1000-1170) ============ -->
+  <!-- Dec0 r16 -->
+  <rect class="box dec" x="1000" y="392" width="170" height="56"/>
+  <text x="1085" y="415" text-anchor="middle" class="t lbl">Decoder 1: Up ⊕ skip</text>
+  <text x="1085" y="433" text-anchor="middle" class="shp">256 @ 16³</text>
+  <!-- Dec1 r32 -->
+  <rect class="box dec" x="1000" y="292" width="170" height="56"/>
+  <text x="1085" y="315" text-anchor="middle" class="t lbl">Decoder 2: Up ⊕ skip</text>
+  <text x="1085" y="333" text-anchor="middle" class="shp">128 @ 32³</text>
+  <!-- Dec2 r64 -->
+  <rect class="box dec" x="1000" y="192" width="170" height="56"/>
+  <text x="1085" y="215" text-anchor="middle" class="t lbl">Decoder 3: Up ⊕ skip</text>
+  <text x="1085" y="233" text-anchor="middle" class="shp">64 @ 64³</text>
+  <!-- Dec3 r128 -->
+  <rect class="box dec" x="1000" y="92" width="170" height="56"/>
+  <text x="1085" y="115" text-anchor="middle" class="t lbl">Decoder 4: Up</text>
+  <text x="1085" y="133" text-anchor="middle" class="shp">16 @ 128³</text>
+  <!-- Seg head -->
+  <rect class="box head" x="1190" y="92" width="140" height="56"/>
+  <text x="1260" y="115" text-anchor="middle" class="t lbl">Seg. Head</text>
+  <text x="1260" y="133" text-anchor="middle" class="shp">Conv 3³ → 11</text>
+  <!-- Output -->
+  <rect class="box io" x="1350" y="92" width="140" height="56"/>
+  <text x="1420" y="115" text-anchor="middle" class="t lbl">Output</text>
+  <text x="1420" y="133" text-anchor="middle" class="shp">11 @ 128³ (softmax)</text>
+
+  <!-- decoder up arrows -->
+  <path class="flow" marker-end="url(#arw)" d="M1085,392 L1085,350"/>
+  <path class="flow" marker-end="url(#arw)" d="M1085,292 L1085,250"/>
+  <path class="flow" marker-end="url(#arw)" d="M1085,192 L1085,150"/>
+  <path class="flow" marker-end="url(#arw)" d="M1170,120 L1188,120"/>
+  <path class="flow" marker-end="url(#arw)" d="M1330,120 L1348,120"/>
+
+  <!-- ============ TRANSFORMER bottleneck (band y~645) ============ -->
+  <rect class="box tr" x="330" y="617" width="140" height="56"/>
+  <text x="400" y="640" text-anchor="middle" class="t lbl">Patch Embed</text>
+  <text x="400" y="658" text-anchor="middle" class="shp">Conv 1³ 1024→768</text>
+
+  <rect class="box tr" x="490" y="617" width="120" height="56"/>
+  <text x="550" y="640" text-anchor="middle" class="t lbl">+ Position</text>
+  <text x="550" y="658" text-anchor="middle" class="shp">512 × 768</text>
+
+  <rect class="box tr" x="630" y="617" width="190" height="56"/>
+  <text x="725" y="640" text-anchor="middle" class="t lbl">Transformer Encoder</text>
+  <text x="725" y="658" text-anchor="middle" class="shp">× 12   (see inset)</text>
+
+  <rect class="box tr" x="840" y="617" width="90" height="56"/>
+  <text x="885" y="640" text-anchor="middle" class="t lbl">LayerNorm</text>
+  <text x="885" y="658" text-anchor="middle" class="shp">512×768</text>
+
+  <rect class="box tr" x="950" y="617" width="120" height="56"/>
+  <text x="1010" y="640" text-anchor="middle" class="t lbl">Reshape</text>
+  <text x="1010" y="658" text-anchor="middle" class="shp">768 @ 8³</text>
+
+  <text x="700" y="712" text-anchor="middle" class="hdr" fill="#6a4fb0">Vision-Transformer Bottleneck  ·  d = 768, L = 12, heads = 12, MLP = 3072, 512 tokens</text>
+
+  <!-- transformer chain arrows -->
+  <path class="flow" marker-end="url(#arw)" d="M470,645 L488,645"/>
+  <path class="flow" marker-end="url(#arw)" d="M610,645 L628,645"/>
+  <path class="flow" marker-end="url(#arw)" d="M820,645 L838,645"/>
+  <path class="flow" marker-end="url(#arw)" d="M930,645 L948,645"/>
+
+  <!-- encoder bottleneck -> patch embed -->
+  <path class="flow" marker-end="url(#arw)" d="M195,548 L195,588 L400,588 L400,615"/>
+  <!-- reshape -> decoder0 -->
+  <path class="flow" marker-end="url(#arw)" d="M1010,617 L1010,588 L1085,588 L1085,450"/>
+
+  <!-- ============ SKIP connections (encoder -> decoder) ============ -->
+  <path class="skip" marker-end="url(#arwO)" d="M280,412 L998,412"/>
+  <text x="640" y="405" text-anchor="middle" fill="#d1791f" font-size="11" font-weight="700">skip  512 @ 16³  (concat)</text>
+  <path class="skip" marker-end="url(#arwO)" d="M280,312 L998,312"/>
+  <text x="640" y="305" text-anchor="middle" fill="#d1791f" font-size="11" font-weight="700">skip  256 @ 32³  (concat)</text>
+  <path class="skip" marker-end="url(#arwO)" d="M280,212 L998,212"/>
+  <text x="640" y="205" text-anchor="middle" fill="#d1791f" font-size="11" font-weight="700">skip  64 @ 64³  (concat)</text>
+
+  <!-- ============ INSET A: PreActBottleneck ============ -->
+  <rect class="frm" x="55" y="755" width="470" height="275"/>
+  <text x="70" y="778" class="hdr" fill="#2c6fbb">Pre-activation Bottleneck (ResNet-V2 unit)</text>
+  <g>
+    <rect class="ib" x="150" y="792" width="230" height="26"/><text x="265" y="809" text-anchor="middle" class="op">input   (C channels)</text>
+    <rect class="ib" x="150" y="830" width="230" height="26"/><text x="265" y="847" text-anchor="middle" class="op">GroupNorm → ReLU → StdConv 1³ (→C/4)</text>
+    <rect class="ib" x="150" y="868" width="230" height="26"/><text x="265" y="885" text-anchor="middle" class="op">GroupNorm → ReLU → StdConv 3³, stride s</text>
+    <rect class="ib" x="150" y="906" width="230" height="26"/><text x="265" y="923" text-anchor="middle" class="op">GroupNorm → StdConv 1³ (→C_out)</text>
+    <rect class="ib" x="150" y="944" width="230" height="26"/><text x="265" y="961" text-anchor="middle" class="op">⊕  residual  (1³ proj if s≠1)</text>
+    <rect class="ib" x="150" y="982" width="230" height="26"/><text x="265" y="999" text-anchor="middle" class="op">ReLU → output</text>
+    <path class="flow" marker-end="url(#arw)" d="M265,818 L265,829"/>
+    <path class="flow" marker-end="url(#arw)" d="M265,856 L265,867"/>
+    <path class="flow" marker-end="url(#arw)" d="M265,894 L265,905"/>
+    <path class="flow" marker-end="url(#arw)" d="M265,932 L265,943"/>
+    <path class="flow" marker-end="url(#arw)" d="M265,970 L265,981"/>
+    <!-- residual skip -->
+    <path class="res" marker-end="url(#arw)" d="M150,805 L120,805 L120,957 L148,957"/>
+    <text x="112" y="884" text-anchor="middle" fill="#8a97a3" font-size="9.5" transform="rotate(-90 112 884)">identity / projection</text>
+    <text x="70" y="1022" class="op" fill="#6a7580">StdConv = weight-standardized Conv3d;  GroupNorm(32).</text>
+  </g>
+
+  <!-- ============ INSET B: Transformer layer ============ -->
+  <rect class="frm" x="545" y="755" width="470" height="275"/>
+  <text x="560" y="778" class="hdr" fill="#6a4fb0">Transformer Encoder Layer  (× 12)</text>
+  <g>
+    <rect class="ib" x="640" y="792" width="240" height="26"/><text x="760" y="809" text-anchor="middle" class="op">input tokens   512 × 768</text>
+    <rect class="ib" x="640" y="832" width="240" height="26"/><text x="760" y="849" text-anchor="middle" class="op">LayerNorm</text>
+    <rect class="ib" x="640" y="872" width="240" height="26"/><text x="760" y="889" text-anchor="middle" class="op">Multi-Head Self-Attention (12 heads)</text>
+    <rect class="ib" x="640" y="912" width="240" height="26"/><text x="760" y="929" text-anchor="middle" class="op">LayerNorm</text>
+    <rect class="ib" x="640" y="952" width="240" height="26"/><text x="760" y="969" text-anchor="middle" class="op">MLP  768 → 3072 → 768  (GELU)</text>
+    <rect class="ib" x="640" y="992" width="240" height="26"/><text x="760" y="1009" text-anchor="middle" class="op">output   512 × 768</text>
+    <path class="flow" marker-end="url(#arw)" d="M760,818 L760,831"/>
+    <path class="flow" marker-end="url(#arw)" d="M760,858 L760,871"/>
+    <path class="flow" marker-end="url(#arw)" d="M760,898 L760,911"/>
+    <path class="flow" marker-end="url(#arw)" d="M760,938 L760,951"/>
+    <path class="flow" marker-end="url(#arw)" d="M760,978 L760,991"/>
+    <!-- residual arcs -->
+    <path class="res" marker-end="url(#arw)" d="M880,805 L920,805 L920,885 L882,885"/>
+    <text x="936" y="847" text-anchor="middle" fill="#8a97a3" font-size="9.5" transform="rotate(90 936 847)">+ residual</text>
+    <path class="res" marker-end="url(#arw)" d="M880,925 L960,925 L960,965 L882,965"/>
+    <text x="975" y="945" text-anchor="middle" fill="#8a97a3" font-size="9.5" transform="rotate(90 975 945)">+ residual</text>
+  </g>
+
+  <!-- ============ INSET C: legend + config ============ -->
+  <rect class="frm" x="1035" y="755" width="445" height="275"/>
+  <text x="1050" y="778" class="hdr" fill="#42505c">Configuration &amp; Legend</text>
+  <g font-size="10.5" class="t">
+    <rect x="1050" y="790" width="16" height="12" class="enc" stroke-width="1.4"/><text x="1074" y="800">ResNet-V2 encoder</text>
+    <rect x="1230" y="790" width="16" height="12" class="tr" stroke-width="1.4"/><text x="1254" y="800">Transformer</text>
+    <rect x="1050" y="810" width="16" height="12" class="dec" stroke-width="1.4"/><text x="1074" y="820">Decoder</text>
+    <rect x="1230" y="810" width="16" height="12" class="head" stroke-width="1.4"/><text x="1254" y="820">Seg. head / output</text>
+    <line x1="1050" y1="836" x2="1082" y2="836" class="skip"/><text x="1090" y="840">skip connection (feature concat)</text>
+  </g>
+  <line x1="1050" y1="852" x2="1465" y2="852" stroke="#e0e5ea"/>
+  <g font-size="10.3" fill="#2b3640">
+    <text x="1050" y="871">Input: 1×128³ CT · HU window [−1000,1000] → [0,1]</text>
+    <text x="1050" y="889">Encoder: units (3,4,9), width 64 · total stride ↓16×</text>
+    <text x="1050" y="907">Bottleneck: 512 tokens · d=768 · L=12 · heads=12 · MLP=3072</text>
+    <text x="1050" y="925">Decoder: channels 256→128→64→16 · 3 skip connections</text>
+    <text x="1050" y="943">Output: 11 classes — bg, myo, LA, LV, RA, RV, Ao,</text>
+    <text x="1063" y="960">PA, LAA, coronary, PV</text>
+    <text x="1050" y="982" font-weight="700">Loss: Dice + Cross-Entropy   ·   Optim: Adam + poly-LR</text>
+    <text x="1050" y="1002" font-weight="700">Precision: bf16 (Blackwell)   ·   Params ≈ 132 M</text>
+    <text x="1050" y="1022" fill="#6a7580">Shapes shown for 128³; scale with input size.</text>
+  </g>
+</svg>
