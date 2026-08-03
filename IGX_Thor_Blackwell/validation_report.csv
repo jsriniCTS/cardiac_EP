@@ -1,0 +1,13 @@
+feature,type,n,pearson_r,mae,bias_pred_minus_gt,loa_low,loa_high,rel_mae_pct,accuracy
+la_region_dominant,categorical,1,,,,,,,1.0
+la_region_inferior_frac,categorical,1,,,,,,,0.0
+la_region_mid_frac,categorical,1,,,,,,,0.0
+la_region_superior_frac,categorical,1,,,,,,,0.0
+la_dai_side,categorical,1,,,,,,,1.0
+la_xsec_region,categorical,1,,,,,,,1.0
+pv_common_left_type,categorical,1,,,,,,,1.0
+pv_anatomy,categorical,1,,,,,,,0.0
+LSPV_ostium_shape,categorical,1,,,,,,,1.0
+LIPV_ostium_shape,categorical,1,,,,,,,1.0
+RSPV_ostium_shape,categorical,1,,,,,,,1.0
+RIPV_ostium_shape,categorical,1,,,,,,,0.0
