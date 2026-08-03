@@ -195,7 +195,7 @@ done
 ## step 6(b) -- feature extraction 
 python extract_features.py --labels-dir ./data/pred_seg --out ./features --workers 16 --ssm --vae --clusters 4
 # Feature's label 
-python extract_features.py --labels-dir ./data/pred_seg --out ./features --workers 16 --ssm --vae --clusters 4
+python extract_features.py --labels-dir /home/cts969795/cardiac/cardiac_EP-main/IGX_Thor_Blackwell/data/stacom_labels --out /home/cts969795/cardiac/cardiac_EP-main/IGX_Thor_Blackwell/features --workers 16 --ssm --vae --clusters 4
 
 
 |------| -----|
