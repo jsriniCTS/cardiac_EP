@@ -181,6 +181,25 @@ cd ../TRUNet-main && python segment_file.py /path/to/scan.nii.gz --gpu
   --num-classes 11 --img-size 128 \
   --output ./data/pred_seg/${id}_seg.nii.gz
 
+## Step 6(a) -- To segment your whole dataset for feature extraction
+ 
+mkdir -p ./data/pred_seg
+for f in ./data/ImageCAS/images/*.img.nii.gz; do
+  id=$(basename "$f" .img.nii.gz)
+  python predict_trunet.py --input "$f" \
+    --checkpoint ./runs/thor_run1/best_metric_model.pth \
+    --trunet-root ./TRUNet-main --num-classes 11 --img-size 128 \
+    --output ./data/pred_seg/${id}_seg.nii.gz
+done
+
+## step 6(b) -- feature extraction 
+python extract_features.py --labels-dir ./data/pred_seg --out ./features --workers 16 --ssm --vae --clusters 4
+# Feature's label 
+python extract_features.py --labels-dir ./data/pred_seg --out ./features --workers 16 --ssm --vae --clusters 4
+
+
+|------| -----|
+One note on features from predictions: predict_trunet.py resamples labels back to the original grid and affine, so extract_features.py reads the correct voxel spacing → volumes/diameters come out in real mm/mL. (If you'd rather compute features on the ground-truth STACOM labels for validation, just point --labels-dir there instead.)
 ## Blackwell / IGX Thor troubleshooting
 
 | Symptom | Fix |
